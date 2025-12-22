@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+/* If you're using Tailwind 3+, add this to your globals.css */
+/* unified scrollbar-hide utility */
+.scrollbar-hide,
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none;             /* Safari and Chrome */
+}
+
+/* Prevent blue highlight / text drag behavior on touch devices
+   Scoped to a utility so you can opt-in where needed */
+.no-tap-highlight,
+.no-tap-highlight * {
+  -webkit-tap-highlight-color: transparent;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/*Category part*/
+.category-width {
+  max-width: 300px;
+}
+@media (min-width: 370px) {
+  .category-width {
+    max-width: 330px;
+  }
+}
+@media (min-width: 390px) {
+  .category-width {
+    max-width: 340px;
+  }
+}
+@media (min-width: 410px) {
+  .category-width {
+    max-width: 360px;
+  }
+}
+@media (min-width: 430px) {
+  .category-width {
+    max-width: 375px;
+  }
+}
+@media (min-width: 520px) {
+  .category-width {
+    max-width: 490px;
+  }
+}
+@media (min-width: 768px) {
+  .category-width {
+    max-width: 230px;
+  }
+}
+@media (min-width: 820px) {
+  .category-width {
+    max-width: 270px;
+  }
+}
+@media (min-width: 850px) {
+  .category-width {
+    max-width: 300px;
+  }
+}
+@media (min-width: 900px) {
+  .category-width {
+    max-width: 360px;
+  }
+}
+@media (min-width: 1024px) {
+  .category-width {
+    max-width: 480px;
+  }
+}
+@media (min-width: 1280px) {
+  .category-width {
+    max-width: 650px;
+  }
+}
+
+/* Recent sidebar middle part */
+.responsive-width {
+  max-width: 170px;
+}
+@media (min-width: 350px) {
+  .responsive-width {
+    max-width: 200px;
+  }
+}
+@media (min-width: 410px) {
+  .responsive-width {
+    max-width: 240px;
+  }
+}
+@media (min-width: 520px) {
+  .responsive-width {
+    max-width: 360px;
+  }
+}
+@media (min-width: 768px) {
+  .responsive-width {
+    max-width: 245px;
+  }
+}
+
+[data-radix-portal] {
+  pointer-events: none !important;
+}
+
+[data-vaul-drawer] {
+  pointer-events: auto !important;
+}
+
+[data-radix-portal], 
+[data-vaul-portal] {
+  pointer-events: none !important;
+}
+
+[data-vaul-drawer],
+[data-vaul-content],
+.fixed.z-\[60\] {
+  pointer-events: auto !important;
+}
+
+html, body {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+}
+
+[data-vaul-focus-guard],
+[data-radix-focus-guard] {
+  display: none !important;
+  pointer-events: none !important;
+}
