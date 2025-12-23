@@ -8033,25 +8033,114 @@ const Map = () => {
           navigator.geolocation.getCurrentPosition(
             (position) => {
               const { latitude, longitude } = position.coords;
-              if (mapInstanceRef.current) {
-                const location = new google.maps.LatLng(latitude, longitude);
-                mapInstanceRef.current.panTo(location);
-                mapInstanceRef.current.setZoom(15);
+              const userLocation = new google.maps.LatLng(latitude, longitude);
+              const map = mapInstanceRef.current;
+              if (!map) return;
 
-                 if (locateMeMarkerRef.current) {
-                  locateMeMarkerRef.current.setPosition(location);
+              if (locateMeMarkerRef.current) {
+                locateMeMarkerRef.current.setPosition(userLocation);
+              } else {
+                locateMeMarkerRef.current = new google.maps.Marker({
+                  position: userLocation,
+                  map: map,
+                  title: "Your Location",
+                });
+              }
+              
+              let nearestShop: Shop | null = null;
+              let minDistance = Infinity;
+
+              (allShops as Shop[]).forEach((shop) => {
+                const d = Math.sqrt(
+                  Math.pow(parseFloat(shop.lat) - latitude, 2) + 
+                  Math.pow(parseFloat(shop.lng) - longitude, 2)
+                );
+                if (d < minDistance) {
+                  minDistance = d;
+                  nearestShop = shop;
+                }
+              });
+
+              const screenHeight = window.innerHeight;
+              const screenWidth = window.innerWidth;
+              const isMobileView = window.innerWidth < 768;
+              let padding = { top: 0, bottom: 0, left: 0, right: 0 };
+              if (screenWidth >= 1280) {
+                padding = { 
+                  top: Math.round(screenHeight * 0.20),    
+                  bottom: Math.round(screenHeight * 0.0),
+                  left: Math.round(screenWidth * 0.10),
+                  right: Math.round(screenWidth * 0.10),
+                };
+              } else if (screenWidth >= 1024) {
+                padding = { 
+                  top: Math.round(screenHeight * 0.20),    
+                  bottom: Math.round(screenHeight * 0.10),
+                  left: Math.round(screenWidth * 0.10),
+                  right: Math.round(screenWidth * 0.10),
+                };
+              } else if (screenWidth >= 768) {
+                padding = { 
+                  top: Math.round(screenHeight * 0.20),    
+                  bottom: Math.round(screenHeight * 0.10),
+                  left: Math.round(screenWidth * 0.20),
+                  right: Math.round(screenWidth * 0.10),
+                };
+              } else {
+                padding = { 
+                  top: Math.round(screenHeight * 0.20),    
+                  bottom: Math.round(screenHeight * 0.20),
+                  left: Math.round(screenWidth * 0.10),
+                  right: Math.round(screenWidth * 0.10),
+                };
+              }
+
+              if (placeSidebar === "full" || placeSidebar === "half") {
+                const sidebarId = placeSidebar === "full" ? "fullSidebar" : "halfSidebar";
+                
+                if (!isMobileView) {
+                  const sidebarEl = document.getElementById(sidebarId);
+                  const sidebarWidth = sidebarEl?.offsetWidth || 410;
+                  if (screenWidth < 1024) {
+                    padding.left = sidebarWidth + 100; 
+                  } else {
+                    padding.left = sidebarWidth + 70;
+                  }
                 } else {
-                  locateMeMarkerRef.current = new google.maps.Marker({
-                    position: location,
-                    map: mapInstanceRef.current,
-                    title: "Your Location",
-                  });
+                  const drawerHeight = window.innerHeight * 0.5;
+                  padding.bottom = drawerHeight + 20; 
+                  padding.top = 180; 
+                  padding.left = 30;
+                  padding.right = 30;
                 }
               }
+
+              if (nearestShop) {
+                const bounds = new google.maps.LatLngBounds();
+                bounds.extend(userLocation);
+                const shopData = nearestShop as Shop; 
+          
+                const shopLocation = new google.maps.LatLng(
+                  parseFloat(shopData.lat), 
+                  parseFloat(shopData.lng)
+                );
+                
+                bounds.extend(shopLocation);
+
+                map.fitBounds(bounds, padding);
+                const listener = google.maps.event.addListener(map, 'idle', () => {
+                  const currentZoom = map.getZoom();
+                  if (currentZoom && currentZoom > 15) {
+                    map.setZoom(15);
+                  } 
+                  google.maps.event.removeListener(listener);
+                });
+              } else {
+                map.panTo(userLocation);
+                map.setZoom(15);
+              }
             },
-            (error) => {
-              console.warn("Geolocation error:", error);
-            }
+            (error) => console.warn("Geolocation error:", error)
           );
         }}
         className={`absolute z-10 right-[20px] bottom-[calc(var(--safe-area-bottom,0px)+160px+max(0px,min(var(--current-sidebar-height,0px),220px)-60px))] 
