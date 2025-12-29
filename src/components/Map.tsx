@@ -97,6 +97,7 @@ export type RecentPlace = {
   reviews?: google.maps.places.PlaceReview[];
   photos?: string[];
   allPhotos?: string[];
+  extraPhotos?: string[];
   fullAddress?: string;
   plusCode?: string;
   applink?: string;
@@ -128,6 +129,7 @@ export interface Shop {
   cuisines?: string[];
   itemsByCuisine?: Record<string, FoodItem[]>;
   allPhotos?: string[];
+  extraPhotos?: string[];
 }
 
 export type CombinedItem =
@@ -909,6 +911,7 @@ const Map = () => {
     const { cuisines, itemsByCuisine } = await fetchShopCuisines(String(shop.shopId));
     const additionalImages = await fetchShopImages(String(shop.shopId));
     const allFSPhotos = [...shop.imageUrls || [], ...(shop.menu || []), ...additionalImages];
+    const menuPhotos = [...(shop.menu || []), ...additionalImages];
 
     {/*Fetch shop rating*/ }
     let shopRating: number | undefined = undefined;
@@ -953,6 +956,7 @@ const Map = () => {
       openCloseTiming: shop.openCloseTiming,
       cuisines: cuisines || [],
       itemsByCuisine: itemsByCuisine || {},
+      extraPhotos : menuPhotos || [],
     };
 
     setRecentPlaces(prev => {
@@ -2789,6 +2793,7 @@ const Map = () => {
     const { cuisines, itemsByCuisine } = await fetchShopCuisines(String(shop.shopId));
     const additionalImages = await fetchShopImages(String(shop.shopId));
     const allFSPhotos = [...shop.imageUrls || [], ...(shop.menu || []), ...additionalImages];
+    const menuPhotos = [...(shop.menu || []), ...additionalImages];
 
     {/*Fetch shop rating*/ }
     let shopRating: number | undefined = undefined;
@@ -2832,7 +2837,8 @@ const Map = () => {
       serviceability: shop.serviceability,
       openCloseTiming: shop.openCloseTiming,
       cuisines: cuisines || [],
-      itemsByCuisine: itemsByCuisine || {}
+      itemsByCuisine: itemsByCuisine || {},
+      extraPhotos : menuPhotos || [],
     };
 
     setRecentPlaces(prev => {
@@ -2900,6 +2906,7 @@ const Map = () => {
     const { cuisines, itemsByCuisine } = await fetchShopCuisines(String(shop.shopId));
     const additionalImages = await fetchShopImages(String(shop.shopId));
     const allFSPhotos = [...shop.imageUrls || [], ...(shop.menu || []), ...additionalImages];
+    const menuPhotos = [...(shop.menu || []), ...additionalImages];
 
     {/*Fetch shop rating*/ }
     let shopRating: number | undefined = undefined;
@@ -2943,7 +2950,8 @@ const Map = () => {
       serviceability: shop.serviceability,
       openCloseTiming: shop.openCloseTiming,
       cuisines: cuisines || [],
-      itemsByCuisine: itemsByCuisine || {}
+      itemsByCuisine: itemsByCuisine || {},
+      extraPhotos : menuPhotos || [],
     };
 
     setRecentPlaces(prev => {
@@ -3141,6 +3149,7 @@ const Map = () => {
               }
 
               const allFSPhotos = [...shop.imageUrls || [], ...(shop.menu || []), ...additionalImages];
+              const menuPhotos = [...(shop.menu || []), ...additionalImages];
 
               const newPlace: RecentPlace = {
                 shopId: shop.shopId,
@@ -3166,7 +3175,8 @@ const Map = () => {
                 serviceability: shop.serviceability,
                 openCloseTiming: shop.openCloseTiming,
                 cuisines: cuisines || [],
-                itemsByCuisine: itemsByCuisine || {}
+                itemsByCuisine: itemsByCuisine || {},
+                extraPhotos : menuPhotos || [],
               };
 
               setRecentPlaces(prev => {
@@ -4200,7 +4210,7 @@ const Map = () => {
                             width={64}
                             height={64}
                             unoptimized
-                            className={`w-full h-full rounded-[10px] object-fit bg-white`}
+                            className={`w-full h-full rounded-[10px] bg-white`}
                           />
 
                           <button
@@ -4731,7 +4741,7 @@ const Map = () => {
                         width={64}
                         height={64}
                         unoptimized
-                        className="w-full h-full rounded-[10px] object-fit bg-white"
+                        className="w-full h-full rounded-[10px] object-cover bg-white"
                       />
 
                       <button
@@ -4931,7 +4941,7 @@ const Map = () => {
                   width={800}
                   height={400}
                   unoptimized
-                  className="w-full h-full object-fit rounded-t-[20px]"
+                  className="w-full h-full rounded-t-[20px]"
                 />
 
                 <button
@@ -5365,14 +5375,14 @@ const Map = () => {
                 */}
 
                 <div className="py-[14px] border-b border-gray-300">
-                  {(recentSelectedPlace?.photos?.length ?? 0) > 0 && (
+                  {(recentSelectedPlace?.extraPhotos?.length ?? 0) > 0 && (
                     <div>
                       <h2 className={`font-sans font-medium tracking-wide ${theme === 'dark' ? 'text-white' : 'text-black'} text-[16px] px-[24px] md:px-[26px] mb-[10px]`}>
                         Menu & highlights
                       </h2>
 
                       <div className="flex gap-3 mt-[18px] overflow-x-auto px-[16px]">
-                        {recentSelectedPlace?.photos?.slice(0, 2).map((url: string, idx: number) => (
+                        {recentSelectedPlace?.extraPhotos?.slice(0, 2).map((url: string, idx: number) => (
                           <div key={idx} className="relative min-w-[150px]">
                             <Image
                               src={url}
@@ -5380,7 +5390,7 @@ const Map = () => {
                               width={160}
                               height={180}
                               unoptimized
-                              className="w-[160px] h-[180px] object-fit rounded-lg bg-white"
+                              className="w-[160px] h-[180px] object-fit md:object-cover rounded-lg bg-white"
                             />
                           </div>
                         ))}
@@ -5600,7 +5610,7 @@ const Map = () => {
                                 width={130}
                                 height={130}
                                 unoptimized
-                                className="flex-shrink-0 w-[130px] h-[130px] md:w-[120px] md:h-[120px] object-fit bg-white rounded-lg mr-[0px] last:mr-[24px]"
+                                className="flex-shrink-0 w-[130px] h-[130px] md:w-[120px] md:h-[120px] object-fit md:object-cover bg-white rounded-lg mr-[0px] last:mr-[24px]"
                               />
                             ))}
                           </div>
@@ -5631,7 +5641,7 @@ const Map = () => {
                               width={600}
                               height={240}
                               unoptimized
-                              className="w-full h-56 md:h-60 object-fit bg-white rounded-lg"
+                              className="w-full h-56 md:h-60 object-cover bg-white rounded-lg"
                             />
                           ))}
                         </div>
@@ -7088,14 +7098,14 @@ const Map = () => {
                   */}
 
                     <div className="py-[16px] border-b border-gray-300">
-                      {(fullSidebarSelectedPlace?.photos?.length ?? 0) > 0 && (
+                      {(fullSidebarSelectedPlace?.extraPhotos?.length ?? 0) > 0 && (
                         <div>
                           <h2 className={`font-sans font-medium tracking-wide ${theme === 'dark' ? 'text-white' : 'text-black'} text-[16px] px-[24px] md:px-[26px] mb-[10px]`}>
                             Menu & highlights
                           </h2>
 
                           <div className="flex justify-between gap-[12px] md:justify-none md:gap-[14px] mt-[18px] overflow-x-auto px-[22px] md:px-[24px]">
-                            {fullSidebarSelectedPlace?.photos?.slice(0, 2).map((url: string, idx: number) => (
+                            {fullSidebarSelectedPlace?.extraPhotos?.slice(0, 2).map((url: string, idx: number) => (
                               <div key={idx} className="relative flex-1 min-w-0 md:flex-none">
                                 <Image
                                   src={url}
@@ -7103,7 +7113,7 @@ const Map = () => {
                                   width={174}
                                   height={200}
                                   unoptimized
-                                  className="w-full md:w-[174px] h-[200px] object-fit rounded-lg bg-white"
+                                  className="w-full md:w-[174px] h-[200px] object-fit md:object-cover rounded-lg bg-white"
                                 />
                               </div>
                             ))}
@@ -7323,7 +7333,7 @@ const Map = () => {
                                     width={130}
                                     height={130}
                                     unoptimized
-                                    className="flex-shrink-0 w-[130px] h-[130px] md:w-[120px] md:h-[120px] object-fit bg-white rounded-lg mr-[0px] last:mr-[24px]"
+                                    className="flex-shrink-0 w-[130px] h-[130px] md:w-[120px] md:h-[120px] object-fit md:object-cover bg-white rounded-lg mr-[0px] last:mr-[24px]"
                                   />
                                 ))}
                               </div>
@@ -7354,7 +7364,7 @@ const Map = () => {
                                   width={600}
                                   height={240}
                                   unoptimized
-                                  className="w-full h-56 md:h-60 object-fit rounded-lg bg-white"
+                                  className="w-full h-56 md:h-60 object-cover rounded-lg bg-white"
                                 />
                               ))}
                             </div>
@@ -7726,6 +7736,7 @@ const Map = () => {
                           const { cuisines, itemsByCuisine } = await fetchShopCuisines(String(shop.shopId));
                           const additionalImages = await fetchShopImages(String(shop.shopId));
                           const allFSPhotos = [...shop.imageUrls || [], ...(shop.menu || []), ...additionalImages];
+                          const menuPhotos = [...(shop.menu || []), ...additionalImages];
 
                           {/*Fetch shop rating*/ }
                           let shopRating: number | undefined = undefined;
@@ -7769,7 +7780,8 @@ const Map = () => {
                             serviceability: shop.serviceability,
                             openCloseTiming: shop.openCloseTiming,
                             cuisines: cuisines || [],
-                            itemsByCuisine: itemsByCuisine || {}
+                            itemsByCuisine: itemsByCuisine || {},
+                            extraPhotos : menuPhotos || [],
                           };
 
                           setRecentPlaces(prev => {
@@ -8407,6 +8419,5 @@ const Map = () => {
     </div>
   );
 };
-
 
 export default Map;
