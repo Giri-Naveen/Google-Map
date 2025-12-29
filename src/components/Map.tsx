@@ -3192,6 +3192,7 @@ const Map = () => {
             const firstImage = (this.data.imageUrls && this.data.imageUrls.length > 0 && this.data.imageUrls[0]) || "https://via.placeholder.com/180x120?text=No+Image";
             //const category = (this.data.cuisine || "").split(",")[0].trim();
             const tooltip = document.createElement("div");
+            tooltip.className = "map-tooltip";
             tooltip.style.position = "absolute";
             tooltip.style.background = "white";
             tooltip.style.padding = "0px";
@@ -3202,7 +3203,6 @@ const Map = () => {
             tooltip.style.whiteSpace = "nowrap";
             tooltip.style.pointerEvents = "none";
             tooltip.style.display = "none";
-            tooltip.style.color = "black";
             tooltip.innerHTML = `
               <div style="display:flex; flex-direction:column; gap:8px;">
                 <img 
@@ -3210,18 +3210,19 @@ const Map = () => {
                   style="
                     width:240px;
                     height:120px;
-                    object-fit:cover;
-                    object-position:top;
+                    object-fit:contain;
+                    object-position:center;
                     border-radius:8px 8px 0px 0px;
+                    background-color:white;
                   "
                 />
 
                 <div style="padding:2px 14px 12px; display:flex; flex-direction:column; gap:4px;">
-                  <div style="font-size:17px; font-family:sans-serif; font-weight:600; color:black;">
+                  <div class="tooltip-text" style="font-size:17px; font-family:sans-serif; font-weight:600; color:black;">
                     ${this.data.name}
                   </div>
 
-                  <div style="display:flex; margin-top:1px; align-items:center; gap:5px; font-size:12.5px; color:black; line-height:1;">
+                  <div class="tooltip-text" style="display:flex; margin-top:1px; align-items:center; gap:5px; font-size:12.5px; color:black; line-height:1;">
                     <span>${this.rating || "4.5"}</span>
 
                     <span style="display:flex; align-items:center; gap:1px;">
@@ -3241,7 +3242,7 @@ const Map = () => {
               }
                   </div>
 
-                  <div style="display:flex; margin-top:1px; align-items:center; gap:6px; font-size:12.5px; color:black;">
+                  <div class="tooltip-text" style="display:flex; margin-top:1px; align-items:center; gap:6px; font-size:12.5px; color:black;">
                     ${this.data.cuisine ? `<span>${this.data.cuisine}</span>` : ""}
                     ${this.priceRange
                 ? `<span><b>·</b></span>
@@ -3251,7 +3252,7 @@ const Map = () => {
               }
                   </div>
 
-                  <div style="font-size:12.5px; margin-top:1px; color:black;">
+                  <div class="tooltip-text" style="font-size:12.5px; margin-top:1px; color:black;">
                     ${this.data.openCloseTiming
                 ? `Open ${this.data.openCloseTiming.split('–')[0]} <b>·</b> <span style="color:red;">Closes ${this.data.openCloseTiming.split('–')[1]}</span>`
                 : `Open 10am <b>·</b> <span style="color:red;"> Closes 10pm</span>`
@@ -3261,6 +3262,7 @@ const Map = () => {
               </div>
             `;
             this.div.appendChild(tooltip);
+            this.updateTheme(theme);
 
             {/*
             this.div.addEventListener("mouseover", () => {
@@ -3312,7 +3314,7 @@ const Map = () => {
             panes?.overlayMouseTarget.appendChild(this.div);
           }
 
-          updateTheme(newTheme: string) {
+          updateTheme(newTheme: string | undefined) {
             if (!this.div) return;
             const nameEl = this.div.querySelector(".label-name") as HTMLElement;
             const cuisineEl = this.div.querySelector(".label-cuisine") as HTMLElement;
@@ -3322,6 +3324,16 @@ const Map = () => {
             if (cuisineEl) cuisineEl.style.color = newTheme === 'dark' ? 'white' : 'black';
             //if (imgEl) imgEl.src = newTheme === 'dark' ? '/location-light.png' : '/location-dark.png';
             if (imgEl) imgEl.src = newTheme === 'dark' ? 'https://cdn-icons-png.flaticon.com/128/4287/4287725.png' : 'https://cdn-icons-png.flaticon.com/128/4287/4287725.png';
+             
+            const tooltip = this.div.querySelector(".map-tooltip") as HTMLElement;
+            if (tooltip) {
+                tooltip.style.background = newTheme === 'dark' ? "#131313" : "white";
+                tooltip.style.borderColor = newTheme === 'dark' ? "#333" : "#ccc";
+            }
+            const tooltipTexts = this.div.querySelectorAll(".tooltip-text");
+            tooltipTexts.forEach((el) => {
+                (el as HTMLElement).style.color = newTheme === 'dark' ? "white" : "black";
+            });
           }
 
           draw() {
@@ -6614,7 +6626,7 @@ const Map = () => {
             <div ref={fullSidebarContentRef} className="overflow-y-auto flex-1 relative">
               {fullSidebarActiveTab === "fullSidebarOverview" && (
                 <>
-                  <div className="hidden md:flex relative w-full h-80 bg-gray-200 overflow-hidden">
+                  <div className={`hidden md:flex relative w-full h-80 ${theme === 'dark' ? 'bg-[#131313]' : 'bg-gray-200'} overflow-hidden`}>
                     <Image
                       src={fullSidebarSelectedPlace?.imageUrl || "/fallback.jpg"}
                       alt={fullSidebarSelectedPlace?.title || "Place"}
@@ -6628,7 +6640,7 @@ const Map = () => {
                     />
                   </div>
 
-                  <div className="md:hidden relative w-full h-[260px] bg-white overflow-hidden">
+                  <div className={`md:hidden relative w-full h-[260px] ${theme === 'dark' ? 'bg-[#131313]' : 'bg-gray-200'} overflow-hidden`}>
                     <div className="flex w-full h-full overflow-x-auto snap-none scroll-smooth no-scrollbar gap-x-[12px] px-[12px]">
                       {(() => {
                         const photos = fullSidebarSelectedPlace?.allPhotos || [];
