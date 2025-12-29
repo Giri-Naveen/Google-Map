@@ -6640,7 +6640,7 @@ const Map = () => {
                     />
                   </div>
 
-                  <div className={`md:hidden relative w-full h-[260px] ${theme === 'dark' ? 'bg-[#131313]' : 'bg-gray-200'} overflow-hidden`}>
+                  <div className={`md:hidden relative w-full h-[260px] ${theme === 'dark' ? 'bg-[#131313]' : 'bg-white'} overflow-hidden`}>
                     <div className="flex w-full h-full overflow-x-auto snap-none scroll-smooth no-scrollbar gap-x-[12px] px-[12px]">
                       {(() => {
                         const photos = fullSidebarSelectedPlace?.allPhotos || [];
