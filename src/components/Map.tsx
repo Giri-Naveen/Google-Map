@@ -533,9 +533,7 @@ const Map = () => {
   const categoryBoundsRef = useRef<google.maps.LatLngBounds | null>(null);
   const [isExploreButton, setIsExploreButton] = useState(false);
   const [exploreButtonKey, setExploreButtonKey] = useState(0);
-
-
-
+  const [categoryKey, setCategoryKey] = useState(0);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isMobileTheme, setIsMobileTheme] = useState(false);
@@ -725,6 +723,8 @@ const Map = () => {
   {/*Shop details will show when category tile is cliked*/ }
   const runCategorySearch = async (shopIds: number[]) => {
     if (!mapInstanceRef.current) return;
+
+    setCategoryKey(prev => prev + 1);
 
     categoryMarkersRef.current.forEach((m) => m.setMap(null));
     categoryMarkersRef.current = [];
@@ -6480,7 +6480,7 @@ const Map = () => {
       >
 
         <div className="flex flex-col h-full">
-          <MobilePlaceSidebar isOpen={placeSidebar === "full"}>
+          <MobilePlaceSidebar isOpen={placeSidebar === "full"} key={fullSidebarSelectedPlace?.shopId}>
             {/*
           {placeSidebar === "full" && (
             <div
@@ -7569,7 +7569,7 @@ const Map = () => {
 
         {/* <MobilePlaceSidebar isOpen={placeSidebar === "half"} initialSnap={isExploreButton ? "148px" : 0.5}> */}
 
-        <MobilePlaceSidebar isOpen={placeSidebar === "half"} key={exploreButtonKey}>
+        <MobilePlaceSidebar isOpen={placeSidebar === "half"} key={exploreButtonKey + categoryKey}>
 
           {/*
           {placeSidebar === "half" && (
