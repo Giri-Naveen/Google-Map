@@ -748,10 +748,10 @@ const Map = () => {
           map: mapInstanceRef.current!,
           title: shop.name,
           icon: {
-            url: "https://cdn-icons-png.flaticon.com/128/4287/4287725.png",
-            scaledSize: new google.maps.Size(32, 34),
-            //url: theme === "dark" ? "/location-light.png" : "/location-dark.png",
-            //scaledSize: new google.maps.Size(32, 70),
+            //url: "https://cdn-icons-png.flaticon.com/128/4287/4287725.png",
+            //scaledSize: new google.maps.Size(32, 34),
+            url: theme === "dark" ? "/location-light.png" : "/location-dark.png",
+            scaledSize: new google.maps.Size(32, 70),
           },
         });
 
@@ -819,10 +819,10 @@ const Map = () => {
     if (categoryMarkersRef.current) {
       categoryMarkersRef.current.forEach((marker) => {
         marker.setIcon({
-          url: 'https://cdn-icons-png.flaticon.com/128/4287/4287725.png',
-          scaledSize: new google.maps.Size(32, 34),
-          //url: theme === "dark" ? "/location-light.png" : "/location-dark.png",
-          //scaledSize: new google.maps.Size(32, 70),
+          //url: 'https://cdn-icons-png.flaticon.com/128/4287/4287725.png',
+          //scaledSize: new google.maps.Size(32, 34),
+          url: theme === "dark" ? "/location-light.png" : "/location-dark.png",
+          scaledSize: new google.maps.Size(32, 70),
         });
       });
     }
@@ -3090,7 +3090,7 @@ const Map = () => {
             this.div.style.cursor = "pointer";
 
             this.div.innerHTML = `
-                <img class="label-icon" src="https://cdn-icons-png.flaticon.com/128/4287/4287725.png" {/*src="${theme === 'dark' ? '/location-light.png' : '/location-dark.png'}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; "/>
+                <img class="label-icon" src="${theme === 'dark' ? '/location-light.png' : '/location-dark.png'}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; "/>
                 <div class="label-text">
                 <div class="label-name" style="font-size:14px; color:${theme === 'dark' ? 'white' : 'black'}">${this.data.name}</div>
                 ${this.data.cuisine ? `<div class="label-cuisine" style="font-size:12px; color:${theme === 'dark' ? 'white' : 'black'}">${this.data.cuisine}</div>` : ""}
@@ -3332,8 +3332,8 @@ const Map = () => {
 
             if (nameEl) nameEl.style.color = newTheme === 'dark' ? 'white' : 'black';
             if (cuisineEl) cuisineEl.style.color = newTheme === 'dark' ? 'white' : 'black';
-            //if (imgEl) imgEl.src = newTheme === 'dark' ? '/location-light.png' : '/location-dark.png';
-            if (imgEl) imgEl.src = newTheme === 'dark' ? 'https://cdn-icons-png.flaticon.com/128/4287/4287725.png' : 'https://cdn-icons-png.flaticon.com/128/4287/4287725.png';
+            if (imgEl) imgEl.src = newTheme === 'dark' ? '/location-light.png' : '/location-dark.png';
+            //if (imgEl) imgEl.src = newTheme === 'dark' ? 'https://cdn-icons-png.flaticon.com/128/4287/4287725.png' : 'https://cdn-icons-png.flaticon.com/128/4287/4287725.png';
              
             const tooltip = this.div.querySelector(".map-tooltip") as HTMLElement;
             if (tooltip) {
@@ -8184,7 +8184,7 @@ const Map = () => {
       {/* Toggle thumbnail */}
       {!showRecentDetailsSidebar && (
         <div
-          className={`absolute z-20 bottom-[calc(var(--safe-area-bottom,0px)+80px+max(0px,min(var(--current-sidebar-height,0px),220px)-60px))] md:bottom-5 left-[20px] md:left-[90px] w-20 h-20 rounded-[8px] overflow-hidden shadow-lg border-2 cursor-pointer group md:transition-[left] md:duration-300 md:ease-in-out transition-[bottom] duration-0 ease-linear
+          className={`absolute z-20 bottom-[calc(var(--safe-area-bottom,0px)+80px+max(0px,min(var(--current-sidebar-height,0px),220px)-60px))] md:bottom-5 left-[20px] md:left-[90px] w-20 h-20 rounded-[8px] overflow-hidden shadow-lg border-2 cursor-pointer group md:transition-[left] md:duration-300 md:ease-in-out transition-[bottom] duration-0 ease-linear will-change-[bottom]
           ${showSidebar ? "md:left-[500px]" : ""}
           ${placeSidebar === "full" ? "md:left-[500px]" : ""}
           ${placeSidebar === "half" ? "md:left-[500px]" : ""}
@@ -8344,7 +8344,7 @@ const Map = () => {
           );
         }}
         className={`absolute z-10 right-[20px] bottom-[calc(var(--safe-area-bottom,0px)+160px+max(0px,min(var(--current-sidebar-height,0px),220px)-60px))] 
-                    md:bottom-[100px] w-[34px] h-[34px] flex items-center justify-center ${theme === 'dark' ? 'bg-[#2a2b2f]' : 'bg-white'} rounded-[8px] shadow-md hover:scale-105 md:transition-transform transition-[bottom] duration-0 ease-linear`}
+                    md:bottom-[100px] w-[34px] h-[34px] flex items-center justify-center ${theme === 'dark' ? 'bg-[#2a2b2f]' : 'bg-white'} rounded-[8px] shadow-md hover:scale-105 md:transition-transform transition-[bottom] duration-0 ease-linear will-change-[bottom]`}
       >
         <MyLocationIcon className={`${theme === 'dark' ? 'text-white' : 'text-black'} cursor-pointer`} style={{ width: 22, height: 22 }} />
       </button>
@@ -8352,7 +8352,7 @@ const Map = () => {
       {/* Custom Zoom Controls */}
       <div
         className={`absolute z-10 right-[20px] bottom-[calc(var(--safe-area-bottom,0px)+84px+max(0px,min(var(--current-sidebar-height,0px),220px)-60px))] 
-                    md:bottom-[24px] flex flex-col ${theme === 'dark' ? 'bg-[#2a2b2f]' : 'bg-white'} rounded-[8px] shadow-md overflow-hidden transition-[bottom] duration-0 ease-linear`
+                    md:bottom-[24px] flex flex-col ${theme === 'dark' ? 'bg-[#2a2b2f]' : 'bg-white'} rounded-[8px] shadow-md overflow-hidden transition-[bottom] duration-0 ease-linear will-change-[bottom]`
         }
       >
         <button
